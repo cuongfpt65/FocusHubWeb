@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusHub Travel Checking - Tourism Management Dashboard</title>
-    <meta name="description" content="Comprehensive tourism management dashboard for Mekong Delta destinations - Can Tho, Vinh Long, and Dong Thap.">
+    <title>FocusHub Travel - Khám Phá Đồng Bằng Sông Cửu Long</title>
+    <meta name="description" content="Khám phá vẻ đẹp Đồng Bằng Sông Cửu Long với FocusHub Travel. Đặt tour du lịch và dịch vụ chụp ảnh chuyên nghiệp tại Cần Thơ, Vĩnh Long, Đồng Tháp.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,582 +19,785 @@
                         'accent-light-orange': '#FB923C',
                         'neutral-gray': '#6B7280',
                         'light-gray': '#F3F4F6',
-                        'dark-gray': '#374151'
+                        'dark-gray': '#374151',
+                        'lotus-pink': '#F8BBD9',
+                        'lotus-deep-pink': '#E91E63',
+                        'gold': '#FFD700',
+                        'emerald': '#50C878'
+                    },
+                    fontFamily: {
+                        'display': ['Playfair Display', 'serif'],
+                        'body': ['Inter', 'sans-serif']
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"
                     }
                 }
             }
         }
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .fade-in {
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease-out;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.9), rgba(5, 150, 105, 0.8), rgba(234, 88, 12, 0.7));
+            position: relative;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('/placeholder.svg?height=1080&width=1920&text=Mekong+Delta+Landscape');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+        }
         .card-hover {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-        .website-preview {
-            position: relative;
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
-            height: 80vh;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+        }
+        .modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .sidebar {
-            transition: transform 0.3s ease;
-        }
-        .sidebar.collapsed {
-            transform: translateX(-100%);
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                z-index: 50;
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-        }
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .website-card {
+        .modal-content {
             background: white;
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            max-width: 500px;
-            margin: 0 auto;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
+        html {
+            scroll-behavior: smooth;
         }
-        .status-online {
-            background-color: #10B981;
-            animation: pulse 2s infinite;
+        .gradient-text {
+            background: linear-gradient(135deg, #1E40AF, #059669, #EA580C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .status-offline {
-            background-color: #EF4444;
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .nav-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .image-overlay {
+            position: relative;
+            overflow: hidden;
+        }
+        .image-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(30, 64, 175, 0.3), rgba(5, 150, 105, 0.3));
+            transition: opacity 0.3s ease;
+        }
+        .image-overlay:hover::after {
+            opacity: 0.7;
+        }
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #1E40AF, #059669);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #059669, #EA580C);
+            transform: translateY(-2px);
+        }
+        .destination-card {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .service-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .stats-counter {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
         }
     </style>
 </head>
-<body class="bg-light-gray">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-        <div class="px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <button id="sidebar-toggle" class="md:hidden p-2 rounded-md text-neutral-gray hover:bg-light-gray">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <div class="flex items-center ml-4 md:ml-0">
-                        <i class="fas fa-compass text-primary-blue text-2xl mr-3"></i>
-                        <h1 class="text-2xl font-bold text-dark-gray">FocusHub Travel Checking</h1>
+<body class="bg-white font-body">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full nav-glass z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-3xl font-bold gradient-text font-display">
+                    <i class="fas fa-camera-retro mr-2"></i>FocusHub Travel
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-dark-gray hover:text-primary-blue transition-all duration-300 font-medium">Trang Chủ</a>
+                    <a href="#destinations" class="text-dark-gray hover:text-primary-blue transition-all duration-300 font-medium">Điểm Đến</a>
+                    <a href="#services" class="text-dark-gray hover:text-primary-blue transition-all duration-300 font-medium">Dịch Vụ</a>
+                    <a href="#gallery" class="text-dark-gray hover:text-primary-blue transition-all duration-300 font-medium">Thư Viện</a>
+                    <a href="#contact" class="text-dark-gray hover:text-primary-blue transition-all duration-300 font-medium">Liên Hệ</a>
+                </div>
+                <button onclick="openBookingModal()" class="btn-gradient text-white px-8 py-3 rounded-full font-semibold pulse-glow">
+                    <i class="fas fa-camera mr-2"></i>Đặt Chụp Ảnh
+                </button>
+                <button class="md:hidden text-dark-gray">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center text-white relative overflow-hidden">
+        <!-- Background Images -->
+        <div class="absolute inset-0 z-0">
+            <div class="grid grid-cols-3 h-full opacity-20">
+                <div class="bg-cover bg-center" style="background-image: url('/placeholder.svg?height=800&width=600&text=Can+Tho+Floating+Market')"></div>
+                <div class="bg-cover bg-center" style="background-image: url('/placeholder.svg?height=800&width=600&text=Vinh+Long+Orchards')"></div>
+                <div class="bg-cover bg-center" style="background-image: url('/placeholder.svg?height=800&width=600&text=Dong+Thap+Lotus+Fields')"></div>
+            </div>
+        </div>
+        
+        <!-- Hero Pattern Overlay -->
+        <div class="absolute inset-0 bg-hero-pattern z-10"></div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-20 text-center px-4 max-w-6xl mx-auto">
+            <div class="slide-in-left">
+                <h1 class="text-6xl md:text-8xl font-bold mb-6 floating-animation font-display text-shadow">
+                    Khám Phá Đồng Bằng
+                    <span class="block text-gold">Sông Cửu Long</span>
+                </h1>
+            </div>
+            <div class="slide-in-right">
+                <p class="text-2xl md:text-3xl mb-4 text-yellow-300 font-medium text-shadow">
+                    ✨ Trải Nghiệm - Khám Phá - Lưu Giữ Kỷ Niệm ✨
+                </p>
+                <p class="text-lg md:text-xl mb-12 max-w-4xl mx-auto opacity-90 leading-relaxed text-shadow">
+                    Cùng FocusHub khám phá vẻ đẹp hoang sơ của <strong>Cần Thơ</strong>, <strong>Vĩnh Long</strong>, <strong>Đồng Tháp</strong> 
+                    với dịch vụ tour du lịch và chụp ảnh chuyên nghiệp. Mỗi khoảnh khắc đều là một tác phẩm nghệ thuật!
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center fade-in">
+                <button onclick="document.getElementById('destinations').scrollIntoView({behavior: 'smooth'})"
+                         class="bg-emerald text-white px-10 py-4 rounded-full text-xl font-bold transition-all duration-300 transform hover:scale-110 shadow-2xl hover:shadow-emerald/50">
+                    <i class="fas fa-compass mr-3"></i>Khám Phá Ngay
+                </button>
+                <button onclick="openBookingModal()"
+                         class="bg-gold text-dark-gray px-10 py-4 rounded-full text-xl font-bold transition-all duration-300 transform hover:scale-110 shadow-2xl hover:shadow-gold/50">
+                    <i class="fas fa-camera mr-3"></i>Đặt Chụp Ảnh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="w-8 h-12 border-2 border-white rounded-full flex justify-center">
+                <div class="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gradient-to-r from-primary-blue via-secondary-green to-accent-orange text-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="fade-in">
+                    <div class="stats-counter text-4xl md:text-5xl font-bold mb-2">3.2M+</div>
+                    <div class="text-lg opacity-90">Du Khách Hài Lòng</div>
+                </div>
+                <div class="fade-in">
+                    <div class="stats-counter text-4xl md:text-5xl font-bold mb-2">500+</div>
+                    <div class="text-lg opacity-90">Bộ Ảnh Đẹp</div>
+                </div>
+                <div class="fade-in">
+                    <div class="stats-counter text-4xl md:text-5xl font-bold mb-2">4.9★</div>
+                    <div class="text-lg opacity-90">Đánh Giá Trung Bình</div>
+                </div>
+                <div class="fade-in">
+                    <div class="stats-counter text-4xl md:text-5xl font-bold mb-2">24/7</div>
+                    <div class="text-lg opacity-90">Hỗ Trợ Khách Hàng</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destinations Section -->
+    <section id="destinations" class="py-24 bg-gradient-to-br from-light-gray to-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-20 fade-in">
+                <h2 class="text-5xl md:text-6xl font-bold gradient-text mb-6 font-display">
+                    Điểm Đến Hấp Dẫn
+                </h2>
+                <p class="text-xl text-neutral-gray max-w-3xl mx-auto leading-relaxed">
+                    Khám phá ba viên ngọc của Đồng Bằng Sông Cửu Long với những trải nghiệm độc đáo và dịch vụ chụp ảnh chuyên nghiệp
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-10">
+                <!-- Can Tho -->
+                <div class="destination-card rounded-3xl shadow-2xl overflow-hidden card-hover fade-in">
+                    <div class="h-80 relative image-overlay">
+                        <img src="https://cdn.glitch.global/418acd52-5c8e-414f-94ac-12b264272353/866af47a-d698-4fa5-9edc-ae7449b1bb95.image.png?v=1751863619760?height=400&width=600&text=Can+Tho+Floating+Market" 
+                             alt="Cần Thơ" class="w-full h-full object-cover">
+                        <div class="absolute top-6 right-6">
+                            <span class="glass-effect text-white px-4 py-2 rounded-full text-sm font-bold">
+                                <i class="fas fa-circle text-green-400 mr-2"></i>Có Sẵn
+                            </span>
+                        </div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <h3 class="text-3xl font-bold mb-2 font-display text-shadow">Cần Thơ</h3>
+                            <p class="text-lg opacity-90 text-shadow">Trái Tim Đồng Bằng Sông Cửu Long</p>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-primary-blue rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-ship text-white"></i>
+                                </div>
+                                <span class="font-medium">Chợ Nổi Cái Răng - Trải nghiệm độc đáo</span>
+                            </div>
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-secondary-green rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-home text-white"></i>
+                                </div>
+                                <span class="font-medium">Nhà Cổ Bình Thủy - Kiến trúc cổ kính</span>
+                            </div>
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-accent-orange rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-bridge text-white"></i>
+                                </div>
+                                <span class="font-medium">Cầu Cần Thơ - Biểu tượng hiện đại</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="visitWebsite('https://chartreuse-thankful-scourge.glitch.me/')" 
+                                    class="flex-1 bg-primary-blue text-white py-3 rounded-xl font-semibold hover:bg-primary-light-blue transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-globe mr-2"></i>Khám Phá
+                            </button>
+                            <button onclick="openBookingModal('cantho')" 
+                                    class="flex-1 bg-gold text-dark-gray py-3 rounded-xl font-semibold hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-camera mr-2"></i>Chụp Ảnh
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="hidden sm:flex items-center space-x-2 bg-light-gray px-3 py-2 rounded-lg">
-                        <i class="fas fa-globe text-primary-blue"></i>
-                        <span class="text-sm text-neutral-gray">Mekong Delta Tourism</span>
+
+                <!-- Vinh Long -->
+                <div class="destination-card rounded-3xl shadow-2xl overflow-hidden card-hover fade-in">
+                    <div class="h-80 relative image-overlay">
+                        <img src="https://cdn.glitch.global/418acd52-5c8e-414f-94ac-12b264272353/a859b24b-7096-4d11-9fe9-0bba4f8789db.image.png?v=1751863707258?height=400&width=600&text=Vinh+Long+Fruit+Gardens" 
+                             alt="Vĩnh Long" class="w-full h-full object-cover">
+                        <div class="absolute top-6 right-6">
+                            <span class="glass-effect text-white px-4 py-2 rounded-full text-sm font-bold">
+                                <i class="fas fa-clock text-yellow-400 mr-2"></i>Sắp Ra Mắt
+                            </span>
+                        </div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <h3 class="text-3xl font-bold mb-2 font-display text-shadow">Vĩnh Long</h3>
+                            <p class="text-lg opacity-90 text-shadow">Viên Ngọc Đồng Bằng Sông Cửu Long</p>
+                        </div>
                     </div>
-                    <button class="p-2 rounded-full bg-primary-blue text-white hover:bg-primary-light-blue transition-colors">
-                        <i class="fas fa-user"></i>
+                    <div class="p-8">
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-tree text-white"></i>
+                                </div>
+                                <span class="font-medium">Đảo An Bình - Thiên đường xanh</span>
+                            </div>
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-apple-alt text-white"></i>
+                                </div>
+                                <span class="font-medium">Vườn Trái Cây - Hương vị tự nhiên</span>
+                            </div>
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-hammer text-white"></i>
+                                </div>
+                                <span class="font-medium">Làng Nghề - Văn hóa truyền thống</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="flex-1 bg-gray-400 text-white py-3 rounded-xl font-semibold cursor-not-allowed" disabled>
+                                <i class="fas fa-globe mr-2"></i>Sắp Ra Mắt
+                            </button>
+                            <button onclick="openBookingModal('vinhlong')" 
+                                    class="flex-1 bg-gold text-dark-gray py-3 rounded-xl font-semibold hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-camera mr-2"></i>Chụp Ảnh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dong Thap -->
+                <div class="destination-card rounded-3xl shadow-2xl overflow-hidden card-hover fade-in">
+                    <div class="h-80 relative image-overlay">
+                        <img src="/placeholder.svg?height=400&width=600&text=Dong+Thap+Lotus+Fields" 
+                             alt="Đồng Tháp" class="w-full h-full object-cover">
+                        <div class="absolute top-6 right-6">
+                            <span class="glass-effect text-white px-4 py-2 rounded-full text-sm font-bold">
+                                <i class="fas fa-clock text-yellow-400 mr-2"></i>Sắp Ra Mắt
+                            </span>
+                        </div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <h3 class="text-3xl font-bold mb-2 font-display text-shadow">Đồng Tháp</h3>
+                            <p class="text-lg opacity-90 text-shadow">Xứ Sở Hoa Sen</p>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-spa text-white"></i>
+                                </div>
+                                <span class="font-medium">Đồng Sen Hồng - Sắc hồng thơ mộng</span>
+                            </div>
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-dove text-white"></i>
+                                </div>
+                                <span class="font-medium">Vườn Chim - Thiên đường chim muông</span>
+                            </div>
+                            <div class="flex items-center text-neutral-gray">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-water text-white"></i>
+                                </div>
+                                <span class="font-medium">Đồng Tháp Mười - Vùng đất ngập nước</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="flex-1 bg-gray-400 text-white py-3 rounded-xl font-semibold cursor-not-allowed" disabled>
+                                <i class="fas fa-globe mr-2"></i>Sắp Ra Mắt
+                            </button>
+                            <button onclick="openBookingModal('dongthap')" 
+                                    class="flex-1 bg-gold text-dark-gray py-3 rounded-xl font-semibold hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-camera mr-2"></i>Chụp Ảnh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 parallax" style="background-image: url('/placeholder.svg?height=800&width=1920&text=Mekong+Delta+Sunset');">
+        <div class="bg-black bg-opacity-60">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-20 fade-in">
+                    <h2 class="text-5xl md:text-6xl font-bold text-white mb-6 font-display text-shadow">
+                        Dịch Vụ Của Chúng Tôi
+                    </h2>
+                    <p class="text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+                        Trải nghiệm hoàn hảo với các dịch vụ chuyên nghiệp và tận tâm
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center p-8 rounded-2xl glass-effect card-hover fade-in">
+                        <div class="w-20 h-20 service-icon rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-camera text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 font-display">Chụp Ảnh Du Lịch</h3>
+                        <p class="text-gray-200 leading-relaxed">Lưu giữ những khoảnh khắc đẹp nhất trong chuyến du lịch của bạn với chất lượng chuyên nghiệp</p>
+                        <div class="mt-4 text-gold font-bold text-lg">Từ 300,000 VNĐ</div>
+                    </div>
+
+                    <div class="text-center p-8 rounded-2xl glass-effect card-hover fade-in">
+                        <div class="w-20 h-20 service-icon rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-route text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 font-display">Tour Hướng Dẫn</h3>
+                        <p class="text-gray-200 leading-relaxed">Khám phá các điểm đến với hướng dẫn viên địa phương giàu kinh nghiệm và am hiểu văn hóa</p>
+                        <div class="mt-4 text-gold font-bold text-lg">Từ 500,000 VNĐ</div>
+                    </div>
+
+                    <div class="text-center p-8 rounded-2xl glass-effect card-hover fade-in">
+                        <div class="w-20 h-20 service-icon rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-ship text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 font-display">Tour Thuyền</h3>
+                        <p class="text-gray-200 leading-relaxed">Trải nghiệm cuộc sống sông nước với các tour thuyền độc đáo qua các kênh rạch</p>
+                        <div class="mt-4 text-gold font-bold text-lg">Từ 400,000 VNĐ</div>
+                    </div>
+
+                    <div class="text-center p-8 rounded-2xl glass-effect card-hover fade-in">
+                        <div class="w-20 h-20 service-icon rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-utensils text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 font-display">Ẩm Thực Địa Phương</h3>
+                        <p class="text-gray-200 leading-relaxed">Thưởng thức các món ăn đặc sản của vùng đất Đồng Bằng Sông Cửu Long</p>
+                        <div class="mt-4 text-gold font-bold text-lg">Từ 200,000 VNĐ</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 bg-gradient-to-br from-light-gray to-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-20 fade-in">
+                <h2 class="text-5xl md:text-6xl font-bold gradient-text mb-6 font-display">
+                    Thư Viện Ảnh
+                </h2>
+                <p class="text-xl text-neutral-gray max-w-3xl mx-auto leading-relaxed">
+                    Những khoảnh khắc đẹp nhất được ghi lại bởi đội ngũ nhiếp ảnh chuyên nghiệp của chúng tôi
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Floating+Market+Photo" alt="Gallery 1" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Lotus+Field+Photo" alt="Gallery 2" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Traditional+House+Photo" alt="Gallery 3" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=River+Sunset+Photo" alt="Gallery 4" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Fruit+Garden+Photo" alt="Gallery 5" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Bird+Sanctuary+Photo" alt="Gallery 6" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Local+Food+Photo" alt="Gallery 7" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden card-hover fade-in image-overlay">
+                    <img src="/placeholder.svg?height=400&width=400&text=Bridge+Photo" alt="Gallery 8" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <div class="text-center mt-12 fade-in">
+                <button onclick="openBookingModal()" class="btn-gradient text-white px-10 py-4 rounded-full text-lg font-semibold">
+                    <i class="fas fa-images mr-2"></i>Xem Thêm Ảnh
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-r from-primary-blue via-secondary-green to-accent-orange text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-hero-pattern opacity-20"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="fade-in max-w-5xl mx-auto">
+                <h2 class="text-5xl md:text-7xl font-bold mb-8 font-display text-shadow">
+                    Sẵn Sàng Khám Phá?
+                </h2>
+                <p class="text-2xl md:text-3xl mb-12 opacity-90 leading-relaxed">
+                    Đặt tour và dịch vụ chụp ảnh ngay hôm nay để có những trải nghiệm tuyệt vời nhất tại Đồng Bằng Sông Cửu Long
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                    <button onclick="openBookingModal()" 
+                            class="bg-white text-primary-blue px-12 py-5 rounded-full text-xl font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 shadow-2xl">
+                        <i class="fas fa-camera mr-3"></i>Đặt Chụp Ảnh Ngay
+                    </button>
+                    <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" 
+                            class="glass-effect text-white px-12 py-5 rounded-full text-xl font-bold hover:bg-white hover:bg-opacity-20 transition-all duration-300 transform hover:scale-110">
+                        <i class="fas fa-phone mr-3"></i>Liên Hệ Tư Vấn
                     </button>
                 </div>
             </div>
         </div>
-    </header>
+    </section>
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar bg-white w-64 min-h-screen shadow-lg">
-            <div class="p-6">
-                <nav class="space-y-2">
-                    <div class="mb-8">
-                        <h2 class="text-lg font-semibold text-dark-gray mb-4">Tourism Destinations</h2>
-                        
-                        <!-- Can Tho -->
-                        <button onclick="loadDestination('cantho')" 
-                                class="destination-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group" 
-                                data-destination="cantho">
-                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                                <i class="fas fa-ship text-green-600"></i>
-                            </div>
-                            <div class="text-left flex-1">
-                                <div class="font-medium text-dark-gray">Can Tho</div>
-                                <div class="text-sm text-neutral-gray">Heart of Mekong Delta</div>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="status-indicator status-online"></span>
-                                <i class="fas fa-chevron-right text-neutral-gray group-hover:text-primary-blue"></i>
-                            </div>
-                        </button>
-
-                        <!-- Vinh Long -->
-                        <button onclick="loadDestination('vinhlong')" 
-                                class="destination-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group mt-2" 
-                                data-destination="vinhlong">
-                            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                                <i class="fas fa-tree text-orange-600"></i>
-                            </div>
-                            <div class="text-left flex-1">
-                                <div class="font-medium text-dark-gray">Vinh Long</div>
-                                <div class="text-sm text-neutral-gray">Pearl of Mekong Delta</div>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="status-indicator status-offline"></span>
-                                <i class="fas fa-chevron-right text-neutral-gray group-hover:text-primary-blue"></i>
-                            </div>
-                        </button>
-
-                        <!-- Dong Thap -->
-                        <button onclick="loadDestination('dongthap')" 
-                                class="destination-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group mt-2" 
-                                data-destination="dongthap">
-                            <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
-                                <i class="fas fa-spa text-pink-600"></i>
-                            </div>
-                            <div class="text-left flex-1">
-                                <div class="font-medium text-dark-gray">Dong Thap</div>
-                                <div class="text-sm text-neutral-gray">Land of Lotus Flowers</div>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="status-indicator status-offline"></span>
-                                <i class="fas fa-chevron-right text-neutral-gray group-hover:text-primary-blue"></i>
-                            </div>
-                        </button>
+    <!-- Footer -->
+    <footer id="contact" class="bg-dark-gray text-white py-20">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-12">
+                <div class="md:col-span-2">
+                    <div class="text-3xl font-bold mb-6 font-display">
+                        <i class="fas fa-camera-retro mr-3 text-gold"></i>FocusHub Travel
                     </div>
-
-                    <div class="border-t pt-6">
-                        <h3 class="text-sm font-semibold text-neutral-gray uppercase tracking-wide mb-4">Management</h3>
-                        <button onclick="showDashboard()" class="w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors">
-                            <i class="fas fa-chart-bar text-primary-blue mr-3"></i>
-                            <span class="text-dark-gray">Dashboard</span>
-                        </button>
-                        <button class="w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors mt-2">
-                            <i class="fas fa-cog text-primary-blue mr-3"></i>
-                            <span class="text-dark-gray">Settings</span>
-                        </button>
-                        <button class="w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors mt-2">
-                            <i class="fas fa-chart-line text-primary-blue mr-3"></i>
-                            <span class="text-dark-gray">Analytics</span>
-                        </button>
-                    </div>
-                </nav>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <!-- Dashboard View -->
-            <div id="dashboard-view" class="dashboard-content">
-                <!-- Welcome Section -->
-                <div class="mb-8 fade-in">
-                    <h2 class="text-3xl font-bold text-dark-gray mb-2">Welcome to FocusHub Travel Management</h2>
-                    <p class="text-neutral-gray">Manage and monitor tourism websites for the beautiful Mekong Delta destinations</p>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-users text-primary-blue text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-neutral-gray">Total Visitors</p>
-                                <p class="text-2xl font-bold text-dark-gray">3.2M+</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-map-marker-alt text-secondary-green text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-neutral-gray">Destinations</p>
-                                <p class="text-2xl font-bold text-dark-gray">3</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-star text-accent-orange text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-neutral-gray">Avg. Rating</p>
-                                <p class="text-2xl font-bold text-dark-gray">4.8</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-calendar text-purple-600 text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-neutral-gray">Active Tours</p>
-                                <p class="text-2xl font-bold text-dark-gray">127</p>
-                            </div>
-                        </div>
+                    <p class="text-gray-300 mb-6 text-lg leading-relaxed">
+                        Khám phá vẻ đẹp Đồng Bằng Sông Cửu Long với dịch vụ tour và chụp ảnh chuyên nghiệp. 
+                        Chúng tôi cam kết mang đến cho bạn những trải nghiệm đáng nhớ nhất.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-white hover:text-gold transition-colors transform hover:scale-110">
+                            <i class="fab fa-facebook text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-gold transition-colors transform hover:scale-110">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-gold transition-colors transform hover:scale-110">
+                            <i class="fab fa-youtube text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-gold transition-colors transform hover:scale-110">
+                            <i class="fab fa-tiktok text-2xl"></i>
+                        </a>
                     </div>
                 </div>
-
-                <!-- Destination Overview Cards -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                    <!-- Can Tho Card -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover fade-in">
-                        <div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 relative">
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                            <div class="absolute bottom-4 left-4 text-white">
-                                <h3 class="text-xl font-bold">Can Tho</h3>
-                                <p class="text-sm opacity-90">Heart of Mekong Delta</p>
-                            </div>
-                            <div class="absolute top-4 right-4">
-                                <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
-                                    <span class="status-indicator status-online"></span>Online
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-sm text-neutral-gray">Status</span>
-                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                                    <i class="fas fa-circle text-green-500 mr-1"></i>Active
-                                </span>
-                            </div>
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-neutral-gray">Floating Markets</span>
-                                    <span class="text-dark-gray font-medium">5 locations</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-neutral-gray">Hotels</span>
-                                    <span class="text-dark-gray font-medium">500+</span>
-                                </div>
-                            </div>
-                            <button onclick="loadDestination('cantho')" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-primary-light-blue transition-colors">
-                                <i class="fas fa-external-link-alt mr-2"></i>View Website
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Vinh Long Card -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover fade-in">
-                        <div class="h-48 bg-gradient-to-br from-orange-400 to-red-500 relative">
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                            <div class="absolute bottom-4 left-4 text-white">
-                                <h3 class="text-xl font-bold">Vinh Long</h3>
-                                <p class="text-sm opacity-90">Pearl of Mekong Delta</p>
-                            </div>
-                            <div class="absolute top-4 right-4">
-                                <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
-                                    <span class="status-indicator status-offline"></span>Pending
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-sm text-neutral-gray">Status</span>
-                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                                    <i class="fas fa-circle text-yellow-500 mr-1"></i>Pending
-                                </span>
-                            </div>
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-neutral-gray">Fruit Orchards</span>
-                                    <span class="text-dark-gray font-medium">An Binh Island</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-neutral-gray">Homestays</span>
-                                    <span class="text-dark-gray font-medium">200+</span>
-                                </div>
-                            </div>
-                            <button onclick="loadDestination('vinhlong')" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-primary-light-blue transition-colors">
-                                <i class="fas fa-external-link-alt mr-2"></i>View Website
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Dong Thap Card -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover fade-in">
-                        <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 relative">
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-                            <div class="absolute bottom-4 left-4 text-white">
-                                <h3 class="text-xl font-bold">Dong Thap</h3>
-                                <p class="text-sm opacity-90">Land of Lotus Flowers</p>
-                            </div>
-                            <div class="absolute top-4 right-4">
-                                <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
-                                    <span class="status-indicator status-offline"></span>Pending
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-sm text-neutral-gray">Status</span>
-                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-                                    <i class="fas fa-circle text-yellow-500 mr-1"></i>Pending
-                                </span>
-                            </div>
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-neutral-gray">Bird Species</span>
-                                    <span class="text-dark-gray font-medium">200+</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-neutral-gray">Nature Reserves</span>
-                                    <span class="text-dark-gray font-medium">25+</span>
-                                </div>
-                            </div>
-                            <button onclick="loadDestination('dongthap')" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-primary-light-blue transition-colors">
-                                <i class="fas fa-external-link-alt mr-2"></i>View Website
-                            </button>
-                        </div>
-                    </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-6 font-display">Điểm Đến</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center"><i class="fas fa-ship mr-2 text-gold"></i>Cần Thơ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center"><i class="fas fa-tree mr-2 text-gold"></i>Vĩnh Long</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors flex items-center"><i class="fas fa-spa mr-2 text-gold"></i>Đồng Tháp</a></li>
+                    </ul>
                 </div>
-
-                <!-- Quick Actions -->
-                <div class="bg-white rounded-xl shadow-sm p-6 fade-in">
-                    <h3 class="text-lg font-semibold text-dark-gray mb-4">Quick Actions</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
-                            <i class="fas fa-plus text-primary-blue text-xl mb-2"></i>
-                            <span class="text-sm text-dark-gray">Add Destination</span>
-                        </button>
-                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
-                            <i class="fas fa-chart-bar text-secondary-green text-xl mb-2"></i>
-                            <span class="text-sm text-dark-gray">View Analytics</span>
-                        </button>
-                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
-                            <i class="fas fa-edit text-accent-orange text-xl mb-2"></i>
-                            <span class="text-sm text-dark-gray">Edit Content</span>
-                        </button>
-                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
-                            <i class="fas fa-download text-purple-600 text-xl mb-2"></i>
-                            <span class="text-sm text-dark-gray">Export Data</span>
-                        </button>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-6 font-display">Liên Hệ</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-phone mr-4 text-gold"></i>
+                            <span class="text-gray-300">0123 456 789</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope mr-4 text-gold"></i>
+                            <span class="text-gray-300">info@focushubtravel.vn</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-4 text-gold"></i>
+                            <span class="text-gray-300">Đồng Bằng Sông Cửu Long</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-4 text-gold"></i>
+                            <span class="text-gray-300">24/7 Hỗ trợ khách hàng</span>
+                        </div>
                     </div>
                 </div>
             </div>
+            
+            <div class="border-t border-gray-600 mt-16 pt-8 text-center">
+                <p class="text-gray-300 text-lg">
+                    © 2024 FocusHub Travel. All rights reserved. Made with ❤️ for Mekong Delta Tourism
+                </p>
+            </div>
+        </div>
+    </footer>
 
-            <!-- Website Viewer -->
-            <div id="website-viewer" class="hidden">
-                <div class="mb-6 flex items-center justify-between">
-                    <div class="flex items-center">
-                        <button onclick="showDashboard()" class="mr-4 p-2 rounded-lg hover:bg-white transition-colors">
-                            <i class="fas fa-arrow-left text-primary-blue"></i>
-                        </button>
+    <!-- Enhanced Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold gradient-text font-display">
+                        <i class="fas fa-camera mr-3"></i>Đặt Dịch Vụ Chụp Ảnh
+                    </h2>
+                    <button onclick="closeBookingModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="bookingForm" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <h2 id="current-destination" class="text-2xl font-bold text-dark-gray"></h2>
-                            <p id="current-description" class="text-neutral-gray"></p>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Họ và Tên *</label>
+                            <input type="text" name="fullName" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Số Điện Thoại *</label>
+                            <input type="tel" name="phone" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all">
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="openInNewTab()" class="px-4 py-2 rounded-lg bg-primary-blue text-white hover:bg-primary-light-blue transition-colors">
-                            <i class="fas fa-external-link-alt mr-2"></i>Open Website
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Email</label>
+                        <input type="email" name="email" 
+                               class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Điểm Đến *</label>
+                        <select name="destination" id="destinationSelect" required 
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all">
+                            <option value="">Chọn điểm đến</option>
+                            <option value="cantho">🚢 Cần Thơ - Trái Tim Đồng Bằng Sông Cửu Long</option>
+                            <option value="vinhlong">🌳 Vĩnh Long - Viên Ngọc Đồng Bằng Sông Cửu Long</option>
+                            <option value="dongthap">🌸 Đồng Tháp - Xứ Sở Hoa Sen</option>
+                        </select>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Ngày Chụp *</label>
+                            <input type="date" name="shootingDate" required 
+                                   class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Số Người</label>
+                            <select name="numberOfPeople" 
+                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all">
+                                <option value="1">1 người</option>
+                                <option value="2">2 người</option>
+                                <option value="3-5">3-5 người</option>
+                                <option value="6-10">6-10 người</option>
+                                <option value="10+">Trên 10 người</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-4">Loại Dịch Vụ *</label>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary-blue transition-all cursor-pointer">
+                                <input type="checkbox" name="services" value="portrait" class="mr-3 w-5 h-5">
+                                <div>
+                                    <div class="font-semibold">Chụp Ảnh Chân Dung</div>
+                                    <div class="text-sm text-gray-600">500,000 VNĐ</div>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary-blue transition-all cursor-pointer">
+                                <input type="checkbox" name="services" value="landscape" class="mr-3 w-5 h-5">
+                                <div>
+                                    <div class="font-semibold">Chụp Ảnh Phong Cảnh</div>
+                                    <div class="text-sm text-gray-600">300,000 VNĐ</div>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary-blue transition-all cursor-pointer">
+                                <input type="checkbox" name="services" value="group" class="mr-3 w-5 h-5">
+                                <div>
+                                    <div class="font-semibold">Chụp Ảnh Nhóm</div>
+                                    <div class="text-sm text-gray-600">800,000 VNĐ</div>
+                                </div>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-primary-blue transition-all cursor-pointer">
+                                <input type="checkbox" name="services" value="wedding" class="mr-3 w-5 h-5">
+                                <div>
+                                    <div class="font-semibold">Chụp Ảnh Cưới</div>
+                                    <div class="text-sm text-gray-600">1,500,000 VNĐ</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Yêu Cầu Đặc Biệt</label>
+                        <textarea name="specialRequests" rows="4" 
+                                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition-all"
+                                  placeholder="Mô tả chi tiết về yêu cầu của bạn..."></textarea>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-xl border-l-4 border-primary-blue">
+                        <h3 class="font-bold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-info-circle mr-2 text-primary-blue"></i>Thông Tin Quan Trọng:
+                        </h3>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Đặt cọc 30% để xác nhận booking</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Miễn phí hủy trước 24 giờ</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Bao gồm chỉnh sửa cơ bản và 20 ảnh đẹp nhất</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Giao ảnh trong vòng 3-5 ngày làm việc</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="button" onclick="closeBookingModal()" 
+                                class="flex-1 bg-gray-300 text-gray-700 py-4 rounded-xl hover:bg-gray-400 transition-colors font-semibold">
+                            Hủy
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 btn-gradient text-white py-4 rounded-xl font-semibold">
+                            <i class="fas fa-paper-plane mr-2"></i>Gửi Yêu Cầu
                         </button>
                     </div>
-                </div>
-
-                <div class="website-preview">
-                    <div class="website-card">
-                        <div class="mb-6">
-                            <i id="destination-icon" class="text-6xl text-primary-blue mb-4"></i>
-                            <h3 id="preview-title" class="text-2xl font-bold text-dark-gray mb-2"></h3>
-                            <p id="preview-description" class="text-neutral-gray mb-4"></p>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-center space-x-2 text-sm">
-                                <span class="status-indicator" id="preview-status"></span>
-                                <span id="status-text" class="text-neutral-gray"></span>
-                            </div>
-                            
-                            <button onclick="openInNewTab()" class="w-full bg-primary-blue text-white py-3 px-6 rounded-lg hover:bg-primary-light-blue transition-colors text-lg font-semibold">
-                                <i class="fas fa-external-link-alt mr-2"></i>Visit Website
-                            </button>
-                            
-                            <p class="text-sm text-neutral-gray">
-                                Click the button above to open the website in a new tab
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
-        </main>
+        </div>
     </div>
 
-    <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
-
     <script>
-        // Destination URLs and information
-        const destinations = {
-            cantho: {
-                url: 'https://chartreuse-thankful-scourge.glitch.me/',
-                name: 'Can Tho',
-                description: 'Heart of Mekong Delta',
-                icon: 'fas fa-ship',
-                status: 'online'
-            },
-            vinhlong: {
-                url: '#',
-                name: 'Vinh Long',
-                description: 'Pearl of Mekong Delta',
-                icon: 'fas fa-tree',
-                status: 'pending'
-            },
-            dongthap: {
-                url: '#',
-                name: 'Dong Thap',
-                description: 'Land of Lotus Flowers',
-                icon: 'fas fa-spa',
-                status: 'pending'
-            }
-        };
-
-        let currentDestination = null;
-
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            showDashboard();
             initializeAnimations();
             setupEventListeners();
+            setMinDate();
         });
 
-        function setupEventListeners() {
-            // Sidebar toggle for mobile
-            document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
-            document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('hidden');
-        }
-
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.remove('open');
-            overlay.classList.add('hidden');
-        }
-
-        function showDashboard() {
-            document.getElementById('dashboard-view').classList.remove('hidden');
-            document.getElementById('website-viewer').classList.add('hidden');
-            
-            // Update active state
-            document.querySelectorAll('.destination-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-50', 'border-primary-blue');
-            });
-            
-            currentDestination = null;
-            closeSidebar();
-        }
-
-        function loadDestination(destinationKey) {
-            const destination = destinations[destinationKey];
-            if (!destination) return;
-
-            // If website is available, open directly
-            if (destination.status === 'online' && destination.url !== '#') {
-                window.open(destination.url, '_blank');
-                return;
-            }
-
-            // Otherwise show preview
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('website-viewer').classList.remove('hidden');
-            
-            // Update destination info
-            document.getElementById('current-destination').textContent = destination.name;
-            document.getElementById('current-description').textContent = destination.description;
-            
-            // Update preview
-            document.getElementById('destination-icon').className = destination.icon + ' text-6xl text-primary-blue mb-4';
-            document.getElementById('preview-title').textContent = destination.name;
-            document.getElementById('preview-description').textContent = destination.description;
-            
-            // Update status
-            const statusIndicator = document.getElementById('preview-status');
-            const statusText = document.getElementById('status-text');
-            
-            if (destination.status === 'online') {
-                statusIndicator.className = 'status-indicator status-online';
-                statusText.textContent = 'Website is online and ready to visit';
-            } else {
-                statusIndicator.className = 'status-indicator status-offline';
-                statusText.textContent = 'Website is under development';
-            }
-            
-            // Update active state
-            document.querySelectorAll('.destination-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-50', 'border-primary-blue');
-            });
-            
-            const activeBtn = document.querySelector(`[data-destination="${destinationKey}"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-blue-50', 'border-primary-blue');
-            }
-            
-            currentDestination = destinationKey;
-            closeSidebar();
-        }
-
-        function openInNewTab() {
-            if (currentDestination) {
-                const destination = destinations[currentDestination];
-                if (destination.url !== '#') {
-                    window.open(destination.url, '_blank');
-                } else {
-                    alert('Website is under development. Please check back later!');
-                }
-            }
-        }
-
         function initializeAnimations() {
-            // Fade in animation observer
             const observerOptions = {
                 threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
+                rootMargin: '0px 0px -100px 0px'
             };
 
             const observer = new IntersectionObserver((entries) => {
@@ -605,16 +808,93 @@
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.fade-in').forEach(el => {
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
                 observer.observe(el);
             });
         }
 
-        // Responsive handling
-        window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768) {
-                closeSidebar();
+        function setupEventListeners() {
+            document.getElementById('bookingForm').addEventListener('submit', handleBookingSubmit);
+        }
+
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="shootingDate"]').setAttribute('min', today);
+        }
+
+        function visitWebsite(url) {
+            window.open(url, '_blank');
+        }
+
+        function openBookingModal(destination = '') {
+            document.getElementById('bookingModal').classList.add('show');
+            if (destination) {
+                document.getElementById('destinationSelect').value = destination;
             }
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+            document.getElementById('bookingForm').reset();
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const services = [];
+            document.querySelectorAll('input[name="services"]:checked').forEach(checkbox => {
+                services.push(checkbox.value);
+            });
+
+            const bookingData = {
+                fullName: formData.get('fullName'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                destination: formData.get('destination'),
+                shootingDate: formData.get('shootingDate'),
+                numberOfPeople: formData.get('numberOfPeople'),
+                services: services,
+                specialRequests: formData.get('specialRequests')
+            };
+
+            // Simulate booking submission with better UX
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang Gửi...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                alert('🎉 Cảm ơn bạn đã đặt dịch vụ! Chúng tôi sẽ liên hệ với bạn trong vòng 24 giờ để xác nhận chi tiết.');
+                console.log('Booking Data:', bookingData);
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                closeBookingModal();
+            }, 2000);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('bookingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingModal();
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
     </script>
 </body>
