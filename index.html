@@ -1,72 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- 
-      This is an HTML comment
-      You can write text in a comment and the content won't be visible in the page
-    -->
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="https://glitch.com/favicon.ico" />
-
-    <!--
-      This is the page head - it contains info the browser uses
-      Like the title, which appears on the browser tab but not inside the page
-      Further down you'll see the content that displays in the page
-    -->
-    <title>Hello World!</title>
-
-    <!-- The website stylesheet -->
-    <link rel="stylesheet" href="/style.css" />
-
-    <!-- The website JavaScript file -->
-    <script src="/script.js" defer></script>
-  </head>
-  <body>
-    <!--
-      The body includes the content you see in the page
-      Each element is defined using tags, like this <div></div>
-      The attributes like class="wrapper" let us style elements in the CSS
-    -->
-    <div class="wrapper">
-      <div class="content" role="main">
-        <h1 class="title">Hello World!</h1>
-        <img
-          src="https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2Fillustration.svg?v=1618177344016"
-          class="illustration"
-          alt="Editor illustration"
-          title="Click the image!"
-        />
-        <div class="instructions">
-          <h2>Using this project</h2>
-          <p>
-            This is the Glitch <strong>Hello Website</strong> project. You can
-            use it to build your own site. Check out the code in the editor and open
-            the <span class="fileopener" data-file="TODO.md" data-line="0"
-              >TODO</span> for next steps!
-          </p>
-          <!--  🚧 TODO: ADD BUTTON HERE -->
-
-          <!-- Once you've added the button from TODO.md, click it in the page -->
-          <!-- Check out the function in script.js to see how it works -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusHub Travel Checking - Tourism Management Dashboard</title>
+    <meta name="description" content="Comprehensive tourism management dashboard for Mekong Delta destinations - Can Tho, Vinh Long, and Dong Thap.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1E40AF',
+                        'primary-light-blue': '#3B82F6',
+                        'secondary-green': '#059669',
+                        'secondary-light-green': '#10B981',
+                        'accent-orange': '#EA580C',
+                        'accent-light-orange': '#FB923C',
+                        'neutral-gray': '#6B7280',
+                        'light-gray': '#F3F4F6',
+                        'dark-gray': '#374151'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .website-preview {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .website-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-online {
+            background-color: #10B981;
+            animation: pulse 2s infinite;
+        }
+        .status-offline {
+            background-color: #EF4444;
+        }
+    </style>
+</head>
+<body class="bg-light-gray">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="md:hidden p-2 rounded-md text-neutral-gray hover:bg-light-gray">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex items-center ml-4 md:ml-0">
+                        <i class="fas fa-compass text-primary-blue text-2xl mr-3"></i>
+                        <h1 class="text-2xl font-bold text-dark-gray">FocusHub Travel Checking</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden sm:flex items-center space-x-2 bg-light-gray px-3 py-2 rounded-lg">
+                        <i class="fas fa-globe text-primary-blue"></i>
+                        <span class="text-sm text-neutral-gray">Mekong Delta Tourism</span>
+                    </div>
+                    <button class="p-2 rounded-full bg-primary-blue text-white hover:bg-primary-light-blue transition-colors">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar bg-white w-64 min-h-screen shadow-lg">
+            <div class="p-6">
+                <nav class="space-y-2">
+                    <div class="mb-8">
+                        <h2 class="text-lg font-semibold text-dark-gray mb-4">Tourism Destinations</h2>
+                        
+                        <!-- Can Tho -->
+                        <button onclick="loadDestination('cantho')" 
+                                class="destination-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group" 
+                                data-destination="cantho">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-ship text-green-600"></i>
+                            </div>
+                            <div class="text-left flex-1">
+                                <div class="font-medium text-dark-gray">Can Tho</div>
+                                <div class="text-sm text-neutral-gray">Heart of Mekong Delta</div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="status-indicator status-online"></span>
+                                <i class="fas fa-chevron-right text-neutral-gray group-hover:text-primary-blue"></i>
+                            </div>
+                        </button>
+
+                        <!-- Vinh Long -->
+                        <button onclick="loadDestination('vinhlong')" 
+                                class="destination-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group mt-2" 
+                                data-destination="vinhlong">
+                            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-tree text-orange-600"></i>
+                            </div>
+                            <div class="text-left flex-1">
+                                <div class="font-medium text-dark-gray">Vinh Long</div>
+                                <div class="text-sm text-neutral-gray">Pearl of Mekong Delta</div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="status-indicator status-offline"></span>
+                                <i class="fas fa-chevron-right text-neutral-gray group-hover:text-primary-blue"></i>
+                            </div>
+                        </button>
+
+                        <!-- Dong Thap -->
+                        <button onclick="loadDestination('dongthap')" 
+                                class="destination-btn w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group mt-2" 
+                                data-destination="dongthap">
+                            <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-spa text-pink-600"></i>
+                            </div>
+                            <div class="text-left flex-1">
+                                <div class="font-medium text-dark-gray">Dong Thap</div>
+                                <div class="text-sm text-neutral-gray">Land of Lotus Flowers</div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="status-indicator status-offline"></span>
+                                <i class="fas fa-chevron-right text-neutral-gray group-hover:text-primary-blue"></i>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-sm font-semibold text-neutral-gray uppercase tracking-wide mb-4">Management</h3>
+                        <button onclick="showDashboard()" class="w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors">
+                            <i class="fas fa-chart-bar text-primary-blue mr-3"></i>
+                            <span class="text-dark-gray">Dashboard</span>
+                        </button>
+                        <button class="w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors mt-2">
+                            <i class="fas fa-cog text-primary-blue mr-3"></i>
+                            <span class="text-dark-gray">Settings</span>
+                        </button>
+                        <button class="w-full flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors mt-2">
+                            <i class="fas fa-chart-line text-primary-blue mr-3"></i>
+                            <span class="text-dark-gray">Analytics</span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="dashboard-content">
+                <!-- Welcome Section -->
+                <div class="mb-8 fade-in">
+                    <h2 class="text-3xl font-bold text-dark-gray mb-2">Welcome to FocusHub Travel Management</h2>
+                    <p class="text-neutral-gray">Manage and monitor tourism websites for the beautiful Mekong Delta destinations</p>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-users text-primary-blue text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-neutral-gray">Total Visitors</p>
+                                <p class="text-2xl font-bold text-dark-gray">3.2M+</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-secondary-green text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-neutral-gray">Destinations</p>
+                                <p class="text-2xl font-bold text-dark-gray">3</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-star text-accent-orange text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-neutral-gray">Avg. Rating</p>
+                                <p class="text-2xl font-bold text-dark-gray">4.8</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm card-hover fade-in">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-calendar text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-neutral-gray">Active Tours</p>
+                                <p class="text-2xl font-bold text-dark-gray">127</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destination Overview Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Can Tho Card -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover fade-in">
+                        <div class="h-48 bg-gradient-to-br from-green-400 to-blue-500 relative">
+                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">Can Tho</h3>
+                                <p class="text-sm opacity-90">Heart of Mekong Delta</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
+                                    <span class="status-indicator status-online"></span>Online
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-neutral-gray">Status</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                    <i class="fas fa-circle text-green-500 mr-1"></i>Active
+                                </span>
+                            </div>
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-neutral-gray">Floating Markets</span>
+                                    <span class="text-dark-gray font-medium">5 locations</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-neutral-gray">Hotels</span>
+                                    <span class="text-dark-gray font-medium">500+</span>
+                                </div>
+                            </div>
+                            <button onclick="loadDestination('cantho')" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-primary-light-blue transition-colors">
+                                <i class="fas fa-external-link-alt mr-2"></i>View Website
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vinh Long Card -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover fade-in">
+                        <div class="h-48 bg-gradient-to-br from-orange-400 to-red-500 relative">
+                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">Vinh Long</h3>
+                                <p class="text-sm opacity-90">Pearl of Mekong Delta</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
+                                    <span class="status-indicator status-offline"></span>Pending
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-neutral-gray">Status</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                                    <i class="fas fa-circle text-yellow-500 mr-1"></i>Pending
+                                </span>
+                            </div>
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-neutral-gray">Fruit Orchards</span>
+                                    <span class="text-dark-gray font-medium">An Binh Island</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-neutral-gray">Homestays</span>
+                                    <span class="text-dark-gray font-medium">200+</span>
+                                </div>
+                            </div>
+                            <button onclick="loadDestination('vinhlong')" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-primary-light-blue transition-colors">
+                                <i class="fas fa-external-link-alt mr-2"></i>View Website
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dong Thap Card -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover fade-in">
+                        <div class="h-48 bg-gradient-to-br from-pink-400 to-purple-500 relative">
+                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">Dong Thap</h3>
+                                <p class="text-sm opacity-90">Land of Lotus Flowers</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-white bg-opacity-20 text-white px-2 py-1 rounded-full text-xs">
+                                    <span class="status-indicator status-offline"></span>Pending
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-neutral-gray">Status</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                                    <i class="fas fa-circle text-yellow-500 mr-1"></i>Pending
+                                </span>
+                            </div>
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-neutral-gray">Bird Species</span>
+                                    <span class="text-dark-gray font-medium">200+</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-neutral-gray">Nature Reserves</span>
+                                    <span class="text-dark-gray font-medium">25+</span>
+                                </div>
+                            </div>
+                            <button onclick="loadDestination('dongthap')" class="w-full bg-primary-blue text-white py-2 rounded-lg hover:bg-primary-light-blue transition-colors">
+                                <i class="fas fa-external-link-alt mr-2"></i>View Website
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-sm p-6 fade-in">
+                    <h3 class="text-lg font-semibold text-dark-gray mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
+                            <i class="fas fa-plus text-primary-blue text-xl mb-2"></i>
+                            <span class="text-sm text-dark-gray">Add Destination</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
+                            <i class="fas fa-chart-bar text-secondary-green text-xl mb-2"></i>
+                            <span class="text-sm text-dark-gray">View Analytics</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
+                            <i class="fas fa-edit text-accent-orange text-xl mb-2"></i>
+                            <span class="text-sm text-dark-gray">Edit Content</span>
+                        </button>
+                        <button class="flex flex-col items-center p-4 rounded-lg border border-gray-200 hover:bg-light-gray transition-colors">
+                            <i class="fas fa-download text-purple-600 text-xl mb-2"></i>
+                            <span class="text-sm text-dark-gray">Export Data</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Website Viewer -->
+            <div id="website-viewer" class="hidden">
+                <div class="mb-6 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button onclick="showDashboard()" class="mr-4 p-2 rounded-lg hover:bg-white transition-colors">
+                            <i class="fas fa-arrow-left text-primary-blue"></i>
+                        </button>
+                        <div>
+                            <h2 id="current-destination" class="text-2xl font-bold text-dark-gray"></h2>
+                            <p id="current-description" class="text-neutral-gray"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openInNewTab()" class="px-4 py-2 rounded-lg bg-primary-blue text-white hover:bg-primary-light-blue transition-colors">
+                            <i class="fas fa-external-link-alt mr-2"></i>Open Website
+                        </button>
+                    </div>
+                </div>
+
+                <div class="website-preview">
+                    <div class="website-card">
+                        <div class="mb-6">
+                            <i id="destination-icon" class="text-6xl text-primary-blue mb-4"></i>
+                            <h3 id="preview-title" class="text-2xl font-bold text-dark-gray mb-2"></h3>
+                            <p id="preview-description" class="text-neutral-gray mb-4"></p>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-center space-x-2 text-sm">
+                                <span class="status-indicator" id="preview-status"></span>
+                                <span id="status-text" class="text-neutral-gray"></span>
+                            </div>
+                            
+                            <button onclick="openInNewTab()" class="w-full bg-primary-blue text-white py-3 px-6 rounded-lg hover:bg-primary-light-blue transition-colors text-lg font-semibold">
+                                <i class="fas fa-external-link-alt mr-2"></i>Visit Website
+                            </button>
+                            
+                            <p class="text-sm text-neutral-gray">
+                                Click the button above to open the website in a new tab
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-    <!-- The footer holds our remix button — you can keep or delete it ✂ -->
-    <footer class="footer">
-      <div class="links"></div>
-      <a
-        class="btn--remix"
-        target="_top"
-        href="https://glitch.com/edit/#!/remix/glitch-hello-website"
-      >
-        <img
-          src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FLogo_Color.svg?v=1618199565140"
-          alt=""
-        />
-        Remix on Glitch
-      </a>
-    </footer>
-  </body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+    <script>
+        // Destination URLs and information
+        const destinations = {
+            cantho: {
+                url: 'https://chartreuse-thankful-scourge.glitch.me/',
+                name: 'Can Tho',
+                description: 'Heart of Mekong Delta',
+                icon: 'fas fa-ship',
+                status: 'online'
+            },
+            vinhlong: {
+                url: '#',
+                name: 'Vinh Long',
+                description: 'Pearl of Mekong Delta',
+                icon: 'fas fa-tree',
+                status: 'pending'
+            },
+            dongthap: {
+                url: '#',
+                name: 'Dong Thap',
+                description: 'Land of Lotus Flowers',
+                icon: 'fas fa-spa',
+                status: 'pending'
+            }
+        };
+
+        let currentDestination = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showDashboard();
+            initializeAnimations();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Sidebar toggle for mobile
+            document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
+            document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('website-viewer').classList.add('hidden');
+            
+            // Update active state
+            document.querySelectorAll('.destination-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-50', 'border-primary-blue');
+            });
+            
+            currentDestination = null;
+            closeSidebar();
+        }
+
+        function loadDestination(destinationKey) {
+            const destination = destinations[destinationKey];
+            if (!destination) return;
+
+            // If website is available, open directly
+            if (destination.status === 'online' && destination.url !== '#') {
+                window.open(destination.url, '_blank');
+                return;
+            }
+
+            // Otherwise show preview
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('website-viewer').classList.remove('hidden');
+            
+            // Update destination info
+            document.getElementById('current-destination').textContent = destination.name;
+            document.getElementById('current-description').textContent = destination.description;
+            
+            // Update preview
+            document.getElementById('destination-icon').className = destination.icon + ' text-6xl text-primary-blue mb-4';
+            document.getElementById('preview-title').textContent = destination.name;
+            document.getElementById('preview-description').textContent = destination.description;
+            
+            // Update status
+            const statusIndicator = document.getElementById('preview-status');
+            const statusText = document.getElementById('status-text');
+            
+            if (destination.status === 'online') {
+                statusIndicator.className = 'status-indicator status-online';
+                statusText.textContent = 'Website is online and ready to visit';
+            } else {
+                statusIndicator.className = 'status-indicator status-offline';
+                statusText.textContent = 'Website is under development';
+            }
+            
+            // Update active state
+            document.querySelectorAll('.destination-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-50', 'border-primary-blue');
+            });
+            
+            const activeBtn = document.querySelector(`[data-destination="${destinationKey}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-blue-50', 'border-primary-blue');
+            }
+            
+            currentDestination = destinationKey;
+            closeSidebar();
+        }
+
+        function openInNewTab() {
+            if (currentDestination) {
+                const destination = destinations[currentDestination];
+                if (destination.url !== '#') {
+                    window.open(destination.url, '_blank');
+                } else {
+                    alert('Website is under development. Please check back later!');
+                }
+            }
+        }
+
+        function initializeAnimations() {
+            // Fade in animation observer
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
 </html>
